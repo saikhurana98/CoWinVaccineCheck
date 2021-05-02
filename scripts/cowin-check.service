@@ -1,0 +1,12 @@
+[Unit]
+Description=Cowin Script That Checks for Available Slots
+Wants=network-online.target
+After=network.target
+
+[Service]
+Environment=ALEXA_NOTIFY_ME_ACCESS_TOKEN="<ACCESS_CODE>"
+ExecStart=/usr/bin/node $HOME/CoWinVaccineCheck/check.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
