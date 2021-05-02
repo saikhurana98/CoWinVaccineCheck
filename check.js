@@ -2,8 +2,8 @@ const axios = require('axios')
 const fs = require('fs')
 
 const ACCESS_CODE = process.env.ALEXA_NOTIFY_ME_ACCESS_TOKEN
-// setx ALEXA_NOTIFY_ME_ACCESS_TOKEN "ACCESS_TOKEN"
 const STATE_DATA = JSON.parse(fs.readFileSync('refactored-districts.json'))
+const CHECK_INTERVAL =  2 * 60 * 1000
 
 const getCenters = async (State, City) => {
     return new Promise((resolve, reject) => {
@@ -57,11 +57,9 @@ const notifyAlexa = async (message) => {
 
         axios(config)
             .then((response) => {
-                console.log(JSON.stringify(response.data));
-                resolve();
+                resolve(response.data);
             })
             .catch((error) => {
-                console.log(error);
                 reject(error);
             });
     })
@@ -69,18 +67,25 @@ const notifyAlexa = async (message) => {
 
 
 const main = async () => {
+    console.log("Checking...");
     const centers = await getCenters("Punjab", "Ludhiana")
     const available_centers = []
     for (const center of centers.centers) {
         center.sessions.forEach(session => {
-            if (session.min_age_limit <= 18) available_centers.push(center)
+            if (session.min_age_limit <= 18 && session.available_capacity > 0) available_centers.push(center)
         })
     }
-    if (available_centers.length > 0) notifyAlexa(`${available_centers.length} COVID Vaccination Centers Available In Your Area`)
-
+    if (available_centers.length > 0 ) {
+        const message = `${available_centers.length} COVID Vaccination Centers Available In Your Area`
+        notifyAlexa(message)
+        console.log(Message);
+        return
+    } 
+    console.log("No Centers Found\n");
 }
 
 
 if (require.main === module) {
     main()
+    setInterval(main,CHECK_INTERVAL);
 };

@@ -25,5 +25,4 @@ export ALEXA_NOTIFY_ME_ACCESS_TOKEN = "REPLACE_WITH_ACCESS_CODE"
 git clone https://github.com/saikhurana98/CoWinVaccineCheck.git
 yarn
 yarn start
-
 ```
