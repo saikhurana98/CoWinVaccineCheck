@@ -76,9 +76,13 @@ const main = async () => {
         })
     }
     if (available_centers.length > 0 ) {
-        const message = `${available_centers.length} COVID Vaccination Centers Available In Your Area`
-        notifyAlexa(message)
-        console.log(Message);
+        try {
+            const message = `${available_centers.length} COVID Vaccination Centers Available In Your Area`
+            notifyAlexa(message)
+            console.log(message);
+        } catch (error) {
+            console.log(error);
+        }
         return
     } 
     console.log("No Centers Found\n");
