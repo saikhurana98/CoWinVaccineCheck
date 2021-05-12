@@ -68,11 +68,18 @@ const notifyAlexa = async (message) => {
 
 const main = async () => {
     console.log("Checking...");
-    const centers = await getCenters("Punjab", "Ludhiana")
+    const centers = await getCenters("Punjab", "SAS Nagar")
     const available_centers = []
     for (const center of centers.centers) {
         center.sessions.forEach(session => {
-            if (session.min_age_limit <= 18 && session.available_capacity > 0) available_centers.push(center)
+
+            const date = new Date(Date.parse(session.date));
+            const now = new Date(Date.now());
+
+            if (session.min_age_limit <= 18 && session.available_capacity > 3  && now < date) {
+                console.log(center);
+                available_centers.push(center)  
+            } 
         })
     }
     if (available_centers.length > 0 ) {
